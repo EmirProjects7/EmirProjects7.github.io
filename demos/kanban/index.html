@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kanban board: interactive preview</title>
+<style>
+:root {
+  --bg: #0f0f12;
+  --col: #17171c;
+  --card: #1f1f26;
+  --card-hover: #262630;
+  --border: #2a2a31;
+  --text: #e8e8ed;
+  --text-dim: #9a9aa6;
+  --text-muted: #71717c;
+  --accent: #5dcaa5;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 14px/1.55 ui-sans-serif, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  height: 100vh; display: flex; flex-direction: column; overflow: hidden;
+}
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+
+.top {
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+  padding: 12px 16px; border-bottom: 1px solid var(--border);
+}
+.board-name { font-size: 14px; font-weight: 500; margin-right: auto; }
+
+/* Only shown when this page is opened on its own, where there is no portfolio
+   around it to click back into. */
+.back {
+  display: inline-flex; align-items: center; gap: 7px; order: -1;
+  background: var(--accent); color: #04241c;
+  font-size: 13px; font-weight: 500; text-decoration: none;
+  border-radius: 8px; padding: 7px 13px;
+}
+.back:hover { background: #6fd8b4; }
+.back[hidden] { display: none; }
+.tip { font-family: var(--mono); font-size: 11px; color: var(--text-muted); }
+
+.filters { display: flex; align-items: center; gap: 6px; padding: 10px 16px; flex-wrap: wrap; }
+.filters span { font-family: var(--mono); font-size: 11px; color: var(--text-muted); margin-right: 2px; }
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: transparent; border: 1px solid var(--border); border-radius: 999px;
+  color: var(--text-dim); font: inherit; font-size: 12px; padding: 3px 10px; cursor: pointer;
+}
+.chip .swatch { width: 8px; height: 8px; border-radius: 50%; }
+.chip[aria-pressed="true"] { color: var(--text); border-color: var(--accent); }
+
+/* Every column shares the width, so the whole board is on screen at once and
+   nothing has to be scrolled sideways to be found. */
+
+.board {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-rows: minmax(0, 1fr);
+  gap: 10px; padding: 6px 16px 16px; align-items: stretch;
+  flex: 1; min-height: 0;
+}
+.column {
+  display: flex; flex-direction: column; min-width: 0; max-height: 100%;
+  background: var(--col); border-radius: 10px; padding: 10px;
+}
+
+/* A column shows its cards outright and only grows a scrollbar once they stop
+   fitting, so the board is still readable at a glance after a card is added. */
+
+.column-body { overflow-y: auto; min-height: 0; margin-right: -4px; padding-right: 4px; }
+.column-body { scrollbar-width: thin; scrollbar-color: #3f3f4b transparent; }
+.column-body::-webkit-scrollbar { width: 8px; }
+.column-body::-webkit-scrollbar-track { background: transparent; }
+.column-body::-webkit-scrollbar-thumb { background: #3f3f4b; border-radius: 4px; }
+.column-body::-webkit-scrollbar-thumb:hover { background: #55555f; }
+.column.drop-target { outline: 1px dashed var(--accent); outline-offset: -3px; }
+.column-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
+.column-title { font-family: var(--mono); font-size: 11px; color: var(--text-dim); letter-spacing: 0.04em; }
+.count { font-family: var(--mono); font-size: 11px; color: var(--text-muted); }
+
+.card {
+  background: var(--card); border: 1px solid transparent; border-radius: 8px;
+  padding: 8px 9px; margin-bottom: 6px; cursor: grab;
+}
+.card:hover { background: var(--card-hover); }
+.card.dragging { opacity: 0.4; }
+.card.done .card-title { color: var(--text-muted); text-decoration: line-through; }
+.card-label { display: block; width: 26px; height: 3px; border-radius: 2px; margin-bottom: 7px; }
+.card-title { display: block; font-size: 13px; word-break: break-word; }
+.card-title[contenteditable="true"] { outline: 1px solid var(--accent); border-radius: 3px; padding: 1px 3px; cursor: text; }
+.card-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 7px; }
+.due { font-family: var(--mono); font-size: 10px; color: var(--text-muted); }
+.due.late { color: #e78b8b; }
+.remove {
+  background: transparent; border: 0; color: var(--text-muted);
+  font: inherit; font-size: 15px; line-height: 1; cursor: pointer; padding: 0 2px;
+}
+.remove:hover { color: #e78b8b; }
+
+.add {
+  width: 100%; flex-shrink: 0; margin-top: 8px;
+  background: transparent; border: 1px dashed var(--border); border-radius: 8px;
+  color: var(--text-muted); font: inherit; font-size: 12px; padding: 6px; cursor: pointer;
+}
+.add:hover { color: var(--text-dim); border-color: var(--text-muted); }
+
+.empty { font-size: 12px; color: var(--text-muted); padding: 6px 2px 10px; }
+
+@media (max-width: 720px) {
+  .board { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 420px) {
+  .board { grid-template-columns: minmax(0, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <a class="back" id="back" href="../../index.html#projects" hidden>
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5 8 12l7 7"/></svg>
+    Back to the portfolio
+  </a>
+  <span class="board-name">Personal board</span>
+  <span class="tip">Drag cards · double click a title to rename · nothing is saved</span>
+</div>
+
+<div class="filters" id="filters"><span>Labels</span></div>
+
+<div class="board" id="board"></div>
+
+<script>
+// Everything lives in this object. No storage, no network: a reload starts over.
+const LABELS = [
+  { id: 'feature', name: 'Feature', color: '#5dcaa5' },
+  { id: 'bug', name: 'Bug', color: '#d4537e' },
+  { id: 'chore', name: 'Chore', color: '#378add' }
+];
+
+// Short titles and a light board on purpose: the first paint should fit without
+// a scrollbar anywhere, and only grow one once a visitor adds cards.
+const initialState = () => ({
+  activeLabels: new Set(),
+  nextId: 8,
+  columns: [
+    {
+      id: 'backlog', title: 'Backlog', cards: [
+        { id: 1, title: 'Board sharing', label: 'feature', due: null },
+        { id: 2, title: 'JSON export', label: 'feature', due: null }
+      ]
+    },
+    {
+      id: 'todo', title: 'To do', cards: [
+        { id: 3, title: 'Auth flow', label: 'feature', due: '2026-08-14' },
+        { id: 4, title: 'Socket tests', label: 'chore', due: null }
+      ]
+    },
+    {
+      id: 'doing', title: 'In progress', cards: [
+        { id: 5, title: 'Drag and drop', label: 'feature', due: '2026-08-11' },
+        { id: 6, title: 'Label filtering', label: 'feature', due: null }
+      ]
+    },
+    { id: 'done', title: 'Done', cards: [{ id: 7, title: 'Prisma schema', label: 'chore', due: null }] }
+  ]
+});
+
+let state = initialState();
+const board = document.getElementById('board');
+const filters = document.getElementById('filters');
+const today = new Date().toISOString().slice(0, 10);
+
+const labelColor = (id) => (LABELS.find((l) => l.id === id) || {}).color;
+
+function findCard(cardId) {
+  for (const column of state.columns) {
+    const index = column.cards.findIndex((c) => c.id === cardId);
+    if (index > -1) return { column, index, card: column.cards[index] };
+  }
+  return null;
+}
+
+function visibleCards(column) {
+  if (state.activeLabels.size === 0) return column.cards;
+  return column.cards.filter((c) => state.activeLabels.has(c.label));
+}
+
+function renderFilters() {
+  filters.querySelectorAll('.chip').forEach((n) => n.remove());
+  for (const label of LABELS) {
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'chip';
+    chip.setAttribute('aria-pressed', String(state.activeLabels.has(label.id)));
+    chip.innerHTML = '<span class="swatch" style="background:' + label.color + '"></span>';
+    chip.append(label.name);
+    chip.addEventListener('click', () => {
+      state.activeLabels.has(label.id)
+        ? state.activeLabels.delete(label.id)
+        : state.activeLabels.add(label.id);
+      render();
+    });
+    filters.append(chip);
+  }
+}
+
+function buildCard(card, columnId) {
+  const el = document.createElement('article');
+  el.className = 'card' + (columnId === 'done' ? ' done' : '');
+  el.draggable = true;
+  el.dataset.cardId = String(card.id);
+
+  if (card.label) {
+    const strip = document.createElement('span');
+    strip.className = 'card-label';
+    strip.style.background = labelColor(card.label);
+    el.append(strip);
+  }
+
+  const title = document.createElement('span');
+  title.className = 'card-title';
+  title.textContent = card.title;
+  title.addEventListener('dblclick', () => {
+    title.contentEditable = 'true';
+    el.draggable = false;
+    title.focus();
+    document.getSelection().selectAllChildren(title);
+  });
+  const commit = () => {
+    title.contentEditable = 'false';
+    el.draggable = true;
+    const text = title.textContent.trim();
+    if (text) card.title = text;
+    render();
+  };
+  title.addEventListener('blur', commit);
+  title.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); commit(); }
+    if (e.key === 'Escape') { title.textContent = card.title; commit(); }
+  });
+  el.append(title);
+
+  const foot = document.createElement('div');
+  foot.className = 'card-foot';
+  const due = document.createElement('span');
+  due.className = 'due' + (card.due && card.due < today ? ' late' : '');
+  due.textContent = card.due || '';
+  const remove = document.createElement('button');
+  remove.type = 'button';
+  remove.className = 'remove';
+  remove.title = 'Delete card';
+  remove.setAttribute('aria-label', 'Delete card: ' + card.title);
+  remove.textContent = '×';
+  remove.addEventListener('click', () => {
+    const hit = findCard(card.id);
+    if (hit) { hit.column.cards.splice(hit.index, 1); render(); }
+  });
+  foot.append(due, remove);
+  el.append(foot);
+
+  el.addEventListener('dragstart', (e) => {
+    e.dataTransfer.setData('text/plain', String(card.id));
+    e.dataTransfer.effectAllowed = 'move';
+    el.classList.add('dragging');
+  });
+  el.addEventListener('dragend', () => el.classList.remove('dragging'));
+
+  return el;
+}
+
+function moveCard(cardId, targetColumn, beforeCardId) {
+  const hit = findCard(cardId);
+  if (!hit) return;
+  hit.column.cards.splice(hit.index, 1);
+  const at = beforeCardId == null
+    ? targetColumn.cards.length
+    : targetColumn.cards.findIndex((c) => c.id === beforeCardId);
+  targetColumn.cards.splice(at < 0 ? targetColumn.cards.length : at, 0, hit.card);
+  render();
+}
+
+function buildColumn(column) {
+  const el = document.createElement('section');
+  el.className = 'column';
+  el.dataset.columnId = column.id;
+
+  const head = document.createElement('div');
+  head.className = 'column-head';
+  const title = document.createElement('span');
+  title.className = 'column-title';
+  title.textContent = column.title;
+  const count = document.createElement('span');
+  count.className = 'count';
+  const cards = visibleCards(column);
+  count.textContent = String(cards.length);
+  head.append(title, count);
+  el.append(head);
+
+  // Only the cards scroll. The heading and the add button stay put, so a full
+  // column still shows what it is and can still take another card.
+  const body = document.createElement('div');
+  body.className = 'column-body';
+  cards.forEach((card) => body.append(buildCard(card, column.id)));
+
+  if (cards.length === 0) {
+    const empty = document.createElement('p');
+    empty.className = 'empty';
+    empty.textContent = state.activeLabels.size ? 'No cards match the filter.' : 'Nothing here yet.';
+    body.append(empty);
+  }
+  el.append(body);
+
+  const add = document.createElement('button');
+  add.type = 'button';
+  add.className = 'add';
+  add.textContent = '+ Add a card';
+  add.addEventListener('click', () => {
+    column.cards.push({ id: state.nextId++, title: 'New card', label: 'feature', due: null });
+    render();
+    // render() rebuilds every column, so the new card has to be found in the
+    // fresh DOM rather than in the element this handler closed over.
+    const titles = document.querySelectorAll('[data-column-id="' + column.id + '"] .card-title');
+    const node = titles[titles.length - 1];
+    if (node) {
+      node.scrollIntoView({block: 'nearest'});
+      node.dispatchEvent(new MouseEvent('dblclick'));
+    }
+  });
+  el.append(add);
+
+  el.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    el.classList.add('drop-target');
+  });
+  el.addEventListener('dragleave', () => el.classList.remove('drop-target'));
+  el.addEventListener('drop', (e) => {
+    e.preventDefault();
+    el.classList.remove('drop-target');
+    const cardId = Number(e.dataTransfer.getData('text/plain'));
+    const over = e.target.closest('.card');
+    moveCard(cardId, column, over ? Number(over.dataset.cardId) : null);
+  });
+
+  return el;
+}
+
+function render() {
+  renderFilters();
+  board.replaceChildren(...state.columns.map(buildColumn));
+}
+
+// Inside the portfolio the way back is the page itself, so the button would be
+// noise. On its own tab it is the only way back.
+if (window.top === window.self) {
+  document.getElementById('back').hidden = false;
+}
+
+// The frame keeps the pointer to itself, so the page behind it cannot follow
+// the cursor. Reporting the position lets the light out there carry on. Two
+// numbers leave this document, at most once per frame.
+let reporting = false;
+
+window.addEventListener('pointermove', (event) => {
+  if (reporting) return;
+  reporting = true;
+  const x = event.clientX;
+  const y = event.clientY;
+  requestAnimationFrame(() => {
+    parent.postMessage({ from: 'demo', x, y }, '*');
+    reporting = false;
+  });
+}, { passive: true });
+
+render();
+</script>
+</body>
+</html>

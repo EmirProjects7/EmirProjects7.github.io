@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Emir Tavukcu: software developer</title>
+<meta name="description" content="Computer science student and full-stack developer. Web, backend and systems work in TypeScript, Java and Node.">
+<meta name="theme-color" content="#0b0b0d">
+<meta property="og:title" content="Emir Tavukcu: software developer">
+<meta property="og:description" content="Computer science student and full-stack developer. Projects you can try in the browser.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230b0b0d'/><text y='68' x='50' text-anchor='middle' font-size='56' font-family='monospace' fill='%235dcaa5'>e</text></svg>">
+<link rel="stylesheet" href="assets/css/style.css?v=10">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<div class="glow" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="#top">Emir Tavukcu</a>
+    <nav class="nav" aria-label="Primary">
+      <a href="#projects">Projects</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+      <a class="nav-icon" href="https://github.com/EmirProjects7" target="_blank" rel="noopener" aria-label="GitHub profile">
+        <svg viewBox="0 0 16 16" width="17" height="17" aria-hidden="true" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+      </a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="hero wrap" id="top">
+    <p class="eyebrow">Computer science student / full-stack developer</p>
+    <h1>I design and build web<br>and backend systems.</h1>
+    <p class="lede">
+      I work mostly in TypeScript, Java and Node, with an eye on the parts that
+      usually get skipped: authentication, data ownership, tests and deployment.
+      One of the projects below runs right here in the page.
+    </p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#projects">See the projects</a>
+      <a class="btn" href="#contact">Get in touch</a>
+    </div>
+  </section>
+
+  <section class="section wrap" id="projects" aria-labelledby="projects-title">
+    <div class="section-head deck-head">
+      <div>
+        <h2 id="projects-title">Projects</h2>
+        <p class="section-note">One at a time. Use the arrows to move between them.</p>
+      </div>
+      <div class="deck-nav">
+        <button class="deck-arrow" type="button" data-deck="prev" aria-label="Previous project" aria-controls="deck">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5 8 12l7 7"/></svg>
+        </button>
+        <span class="deck-count"><span data-deck-position>1</span> / <span data-deck-total>3</span></span>
+        <button class="deck-arrow" type="button" data-deck="next" aria-label="Next project" aria-controls="deck">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="deck" id="deck" tabindex="0" role="group" aria-label="Projects, one per panel">
+
+    <article class="project" id="project-kanban">
+      <header class="project-head">
+        <span class="project-index">01</span>
+        <div>
+          <h3>Kanban board</h3>
+          <p class="project-tagline">
+            A full-stack, real-time board with accounts, private boards and drag and drop.
+            Changes made in one session show up in another without a reload.
+          </p>
+        </div>
+      </header>
+
+      <div class="demo" data-demo data-src="demos/kanban/index.html" data-title="Kanban board demo">
+        <div class="demo-bar">
+          <span class="demo-status"><span class="dot"></span> Interactive preview</span>
+          <span class="demo-hint">Resets on reload</span>
+        </div>
+
+        <div class="demo-stage">
+          <!-- Poster: drawn in CSS, no image to download. Replaced by the iframe on play. -->
+          <div class="poster" aria-hidden="true">
+            <div class="poster-col">
+              <span class="poster-label">To do</span>
+              <span class="poster-card"><i class="tag tag-pink"></i>Wire up the auth flow</span>
+              <span class="poster-card"><i class="tag tag-blue"></i>Socket tests</span>
+            </div>
+            <div class="poster-col">
+              <span class="poster-label">In progress</span>
+              <span class="poster-card is-active"><i class="tag tag-teal"></i>Drag and drop ordering</span>
+            </div>
+            <div class="poster-col">
+              <span class="poster-label">Done</span>
+              <span class="poster-card is-done">Prisma schema</span>
+            </div>
+          </div>
+
+          <button class="play" type="button" data-play>
+            <span class="play-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M7 5.2 17 12 7 18.8Z"/></svg>
+            </span>
+            <span class="play-text">Run the demo</span>
+          </button>
+        </div>
+
+        <footer class="project-foot">
+          <ul class="stack" aria-label="Tech stack">
+            <li>React</li><li>TypeScript</li><li>Node</li><li>Socket.IO</li><li>PostgreSQL</li><li>Prisma</li>
+          </ul>
+          <div class="links">
+            <a href="https://github.com/EmirProjects7/kanban-board-project" target="_blank" rel="noopener">Source</a>
+            <a href="demos/kanban/index.html" target="_blank" rel="noopener">Open full screen</a>
+          </div>
+        </footer>
+      </div>
+
+      <p class="disclosure">
+        The preview is a trimmed, browser-only build: no server, no database, no accounts.
+        The full application runs its own API, WebSocket layer and PostgreSQL.
+      </p>
+    </article>
+
+    <article class="project" id="project-shortener">
+      <header class="project-head">
+        <span class="project-index">02</span>
+        <div>
+          <h3>URL shortener</h3>
+          <p class="project-tagline">
+            A shortening service built around two problems: handing out short codes that
+            never collide, and serving the redirect from cache so the database stays out
+            of the hot path.
+          </p>
+        </div>
+      </header>
+
+      <div class="project-card">
+        <ul class="stack" aria-label="Tech stack">
+          <li>Java 21</li><li>Spring Boot</li><li>PostgreSQL</li><li>Redis</li><li>Gradle</li>
+        </ul>
+        <div class="links"><span class="private">Private repo</span></div>
+      </div>
+
+      <p class="disclosure">
+        No preview: the service is a backend, and a redirect needs a server to answer it.
+      </p>
+    </article>
+
+    <article class="project" id="project-railsim">
+      <header class="project-head">
+        <span class="project-index">03</span>
+        <div>
+          <h3>RailSim</h3>
+          <p class="project-tagline">
+            A longitudinal train dynamics simulator. It records telemetry as a run
+            unfolds, turns it into analytics afterwards, and carries an agent layer
+            driven by a language model running locally.
+          </p>
+        </div>
+      </header>
+
+      <div class="project-card">
+        <ul class="stack" aria-label="Tech stack">
+          <li>Python</li><li>uv</li><li>Simulation</li><li>Telemetry</li><li>Local LLM</li>
+        </ul>
+        <div class="links"><span class="private">Private repo</span></div>
+      </div>
+
+      <p class="disclosure">
+        No preview: the simulation runs as a desktop process, not in a browser tab.
+      </p>
+    </article>
+
+    </div>
+  </section>
+
+  <section class="section wrap" id="about" aria-labelledby="about-title">
+    <div class="section-head">
+      <h2 id="about-title">About</h2>
+    </div>
+    <div class="about-grid">
+      <div class="prose">
+        <p>
+          I'm Emir, a computer science student. I like problems where the interesting
+          part is not the feature itself but everything holding it up: who is allowed
+          to touch which row, what happens when two sessions edit the same thing, and
+          how the whole thing gets shipped.
+        </p>
+        <p>
+          Most of my time goes into full-stack work, but I also enjoy simulation and
+          tooling. I write tests as I go and keep projects runnable with a single command.
+        </p>
+      </div>
+      <div class="skills">
+        <div class="skill-group">
+          <h3>Languages</h3>
+          <ul><li>TypeScript</li><li>JavaScript</li><li>Java</li><li>SQL</li><li>Python</li><li>Kotlin</li></ul>
+        </div>
+        <div class="skill-group">
+          <h3>Frontend</h3>
+          <ul><li>React</li><li>Vite</li><li>HTML / CSS</li></ul>
+        </div>
+        <div class="skill-group">
+          <h3>Backend</h3>
+          <ul><li>Node</li><li>Express</li><li>Spring</li><li>Prisma</li><li>PostgreSQL</li></ul>
+        </div>
+        <div class="skill-group">
+          <h3>Tooling</h3>
+          <ul><li>Git</li><li>Docker</li><li>Vitest</li><li>GitHub Actions</li></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section wrap" id="contact" aria-labelledby="contact-title">
+    <div class="section-head">
+      <h2 id="contact-title">Contact</h2>
+    </div>
+    <p class="lede">Reach me through GitHub and I'll get back to you.</p>
+    <ul class="contact-list">
+      <li><span class="contact-key">GitHub</span><a href="https://github.com/EmirProjects7" target="_blank" rel="noopener">github.com/EmirProjects7</a></li>
+    </ul>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <span>© <span data-year>2026</span> Emir Tavukcu</span>
+    <span>Built with plain HTML, CSS and JavaScript</span>
+  </div>
+</footer>
+
+<script src="assets/js/main.js?v=10" defer></script>
+</body>
+</html>

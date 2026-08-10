@@ -134,14 +134,23 @@ if (glow && matchMedia('(pointer: fine)').matches && !matchMedia('(prefers-reduc
       started = true;
       currentX = clientX;
       currentY = clientY;
-      glow.classList.add('is-lit');
     }
+
+    // Set on every move, not just the first: crossing into the demo frame reads
+    // as leaving the document and puts the light out, and it has to come back
+    // as soon as a position arrives again.
+    glow.classList.add('is-lit');
 
     if (!frame) frame = requestAnimationFrame(step);
   }
 
   window.addEventListener('pointermove', (event) => moveTo(event.clientX, event.clientY), {passive: true});
-  document.addEventListener('mouseleave', () => glow.classList.remove('is-lit'));
+
+  // Only when the pointer leaves the window itself. Moving onto a frame inside
+  // the page also raises this event, and there relatedTarget is set.
+  document.addEventListener('mouseout', (event) => {
+    if (!event.relatedTarget) glow.classList.remove('is-lit');
+  });
 
   // A frame keeps the pointer to itself, which would strand the light at the
   // edge of a running demo. The demo reports where the pointer is and that

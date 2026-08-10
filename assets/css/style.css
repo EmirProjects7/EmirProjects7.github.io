@@ -273,7 +273,21 @@ h1, h2, h3 { font-weight: 500; line-height: 1.25; margin: 0; letter-spacing: -0.
 .contact-list a { color: var(--text); text-decoration: none; border-bottom: 1px solid var(--border-strong); }
 .contact-list a:hover { border-color: var(--accent); color: var(--accent); }
 
+/* Privacy page */
+
+.legal { border-top: 0; }
+.legal h1 { font-size: 26px; margin-bottom: 22px; }
+.legal p { max-width: 68ch; color: var(--text-dim); margin: 0 0 18px; }
+.legal a { color: var(--text); text-decoration: none; border-bottom: 1px solid var(--border-strong); }
+.legal a:hover { color: var(--accent); border-color: var(--accent); }
+.legal .btn { border-bottom-width: 1px; }
+.legal .btn:hover { color: var(--text); }
+
 /* Footer */
+
+.footer-links { display: flex; flex-wrap: wrap; gap: 18px; align-items: baseline; }
+.footer-links a { color: var(--text-dim); text-decoration: none; border-bottom: 1px solid var(--border-strong); }
+.footer-links a:hover { color: var(--accent); border-color: var(--accent); }
 
 .site-footer { border-top: 1px solid var(--border); margin-top: 24px; }
 .footer-inner {

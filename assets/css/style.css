@@ -36,18 +36,25 @@ body {
 
 a { color: inherit; }
 
-/* A soft light under the page that follows the pointer. It sits behind
-   everything and takes no clicks, so it can only ever be decoration. */
+/* A faint lift in the surface under the pointer. Nearly colourless and low
+   contrast on purpose: it should register as light in the room rather than as
+   a coloured spot chasing the cursor. It sits behind everything and takes no
+   clicks, so it can only ever be decoration. */
 
 .glow {
   position: fixed; inset: 0; z-index: -1; pointer-events: none;
-  opacity: 0; transition: opacity .4s;
-  background: radial-gradient(
-    130px circle at var(--glow-x, 50%) var(--glow-y, 40%),
-    rgba(93, 202, 165, 0.16),
-    rgba(93, 202, 165, 0.05) 45%,
-    transparent 72%
-  );
+  opacity: 0; transition: opacity .5s ease-out;
+  background:
+    radial-gradient(
+      120px circle at var(--glow-x, 50%) var(--glow-y, 40%),
+      rgba(214, 240, 232, 0.045),
+      transparent 68%
+    ),
+    radial-gradient(
+      340px circle at var(--glow-x, 50%) var(--glow-y, 40%),
+      rgba(93, 202, 165, 0.030),
+      transparent 70%
+    );
 }
 .glow.is-lit { opacity: 1; }
 
@@ -126,9 +133,15 @@ h1, h2, h3 { font-weight: 500; line-height: 1.25; margin: 0; letter-spacing: -0.
 
 .deck {
   display: flex; gap: 24px; align-items: stretch;
-  padding-inline: 7%;
+  padding-inline: 15%;
   overflow-x: auto; overscroll-behavior-x: contain;
   scrollbar-width: none;
+
+  /* The row is cut off by a fade rather than by an edge, so a neighbour is
+     readable where it meets the middle panel and has thinned to nothing by the
+     time it reaches the side of the window. */
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 17%, #000 83%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 17%, #000 83%, transparent 100%);
 }
 .deck::-webkit-scrollbar { display: none; }
 
@@ -137,10 +150,10 @@ h1, h2, h3 { font-weight: 500; line-height: 1.25; margin: 0; letter-spacing: -0.
    and the demo takes whatever the text leaves. */
 
 .project {
-  flex: 0 0 86%;
+  flex: 0 0 70%;
   display: flex; flex-direction: column;
   height: clamp(420px, 78vh, 820px);
-  opacity: 0.28; cursor: pointer;
+  opacity: 0.4; cursor: pointer;
   transition: opacity .25s;
 }
 .project.is-active { opacity: 1; cursor: default; }

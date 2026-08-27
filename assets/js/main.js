@@ -104,44 +104,29 @@ if (deck) {
 const glow = document.querySelector('.glow');
 
 if (glow && matchMedia('(pointer: fine)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-  let targetX = 0;
-  let targetY = 0;
-  let currentX = 0;
-  let currentY = 0;
-  let started = false;
-  let frame = null;
-
-  // The light trails the pointer instead of being pinned to it. Easing towards
-  // the target each frame is what keeps it from reading as a sticker on the
-  // cursor, and it also caps the work at one style write per repaint.
-  function step() {
-    currentX += (targetX - currentX) * 0.12;
-    currentY += (targetY - currentY) * 0.12;
-    glow.style.setProperty('--glow-x', currentX.toFixed(1) + 'px');
-    glow.style.setProperty('--glow-y', currentY.toFixed(1) + 'px');
-
-    const settled = Math.abs(targetX - currentX) < 0.5 && Math.abs(targetY - currentY) < 0.5;
-    frame = settled ? null : requestAnimationFrame(step);
-  }
+  let x = 0;
+  let y = 0;
+  let queued = false;
 
   function moveTo(clientX, clientY) {
-    targetX = clientX;
-    targetY = clientY;
-
-    // Land where the pointer already is the first time, rather than sweeping
-    // in from the corner.
-    if (!started) {
-      started = true;
-      currentX = clientX;
-      currentY = clientY;
-    }
+    x = clientX;
+    y = clientY;
 
     // Set on every move, not just the first: crossing into the demo frame reads
     // as leaving the document and puts the light out, and it has to come back
     // as soon as a position arrives again.
     glow.classList.add('is-lit');
 
-    if (!frame) frame = requestAnimationFrame(step);
+    // The light sits on the pointer. The only thing held back is the writing:
+    // a pointer reports far more often than the screen repaints, so the
+    // position is stored now and written once, on the next frame.
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(() => {
+      glow.style.setProperty('--glow-x', x + 'px');
+      glow.style.setProperty('--glow-y', y + 'px');
+      queued = false;
+    });
   }
 
   window.addEventListener('pointermove', (event) => moveTo(event.clientX, event.clientY), {passive: true});

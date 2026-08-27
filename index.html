@@ -10,7 +10,7 @@
 <meta property="og:description" content="Computer science student and full-stack developer. Projects you can try in the browser.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230b0b0d'/><text y='68' x='50' text-anchor='middle' font-size='56' font-family='monospace' fill='%235dcaa5'>e</text></svg>">
-<link rel="stylesheet" href="assets/css/style.css?v=19">
+<link rel="stylesheet" href="assets/css/style.css?v=20">
 </head>
 <body>
 
@@ -94,17 +94,18 @@
           <!-- Poster: drawn in CSS, no image to download. Replaced by the iframe on play. -->
           <div class="poster" aria-hidden="true">
             <div class="poster-col">
+              <span class="poster-label">Backlog</span>
+              <span class="poster-card"><i class="tag tag-teal"></i>Board sharing</span>
+              <span class="poster-card"><i class="tag tag-teal"></i>JSON export</span>
+            </div>
+            <div class="poster-col">
               <span class="poster-label">To do</span>
-              <span class="poster-card"><i class="tag tag-pink"></i>Wire up the auth flow</span>
+              <span class="poster-card"><i class="tag tag-teal"></i>Auth flow</span>
               <span class="poster-card"><i class="tag tag-blue"></i>Socket tests</span>
             </div>
             <div class="poster-col">
               <span class="poster-label">In progress</span>
-              <span class="poster-card is-active"><i class="tag tag-teal"></i>Drag and drop ordering</span>
-            </div>
-            <div class="poster-col">
-              <span class="poster-label">Done</span>
-              <span class="poster-card is-done">Prisma schema</span>
+              <span class="poster-card is-active"><i class="tag tag-teal"></i>Drag and drop</span>
             </div>
           </div>
 
@@ -130,8 +131,9 @@
       </div>
 
       <p class="disclosure">
-        The preview is a trimmed, browser-only build: no server, no database, no accounts.
-        The full application runs its own API, WebSocket layer and PostgreSQL.
+        The preview is a browser-only stand-in for the board: no server, no database,
+        no accounts, and nothing kept between reloads. The application itself runs an
+        Express API, a Socket.IO layer and PostgreSQL behind a login.
       </p>
     </article>
 
@@ -256,6 +258,6 @@
   </div>
 </footer>
 
-<script src="assets/js/main.js?v=19" defer></script>
+<script src="assets/js/main.js?v=20" defer></script>
 </body>
 </html>

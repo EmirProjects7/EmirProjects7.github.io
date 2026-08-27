@@ -160,7 +160,10 @@ h1, h2, h3 { font-weight: 500; line-height: 1.25; margin: 0; letter-spacing: -0.
 .project {
   flex: 0 0 var(--panel);
   display: flex; flex-direction: column;
-  height: clamp(420px, 78vh, 820px);
+  /* A floor rather than a fixed height: the panel still fills the window on a
+     normal screen, but a crowded footer pushes it taller instead of spilling
+     out of a box that cannot grow. */
+  min-height: clamp(420px, 78vh, 820px);
   opacity: 0.4; cursor: pointer;
   transition: opacity .25s;
 }
@@ -272,6 +275,7 @@ h1, h2, h3 { font-weight: 500; line-height: 1.25; margin: 0; letter-spacing: -0.
 }
 .links a:hover { color: var(--text); border-color: var(--accent); }
 .private { font-family: var(--mono); font-size: 12px; color: var(--text-muted); }
+.measure { font-family: var(--mono); font-size: 12px; color: var(--text-muted); align-self: center; }
 
 .disclosure { margin: 12px 2px 0; font-size: 13px; color: var(--text-muted); max-width: 70ch; }
 .more-soon { margin: 40px 0 0; font-size: 14px; color: var(--text-muted); }

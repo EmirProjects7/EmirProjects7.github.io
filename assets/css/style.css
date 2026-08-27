@@ -145,11 +145,12 @@ h1, h2, h3 { font-weight: 500; line-height: 1.25; margin: 0; letter-spacing: -0.
   overflow-x: auto; overscroll-behavior-x: contain;
   scrollbar-width: none;
 
-  /* Cut off by a fade rather than by an edge, so a neighbour is readable where
-     it meets the middle panel and has thinned to nothing by the time it reaches
-     the side of the window. */
-  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 15%, #000 85%, transparent 100%);
-  mask-image: linear-gradient(to right, transparent 0, #000 15%, #000 85%, transparent 100%);
+  /* The fade covers the margins and stops exactly where the middle panel starts,
+     so a neighbour thins out towards the window edge while the panel in the
+     middle is never dimmed by it. */
+  --fade: calc((100% - var(--panel)) / 2);
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 var(--fade), #000 calc(100% - var(--fade)), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 var(--fade), #000 calc(100% - var(--fade)), transparent 100%);
 }
 .deck::-webkit-scrollbar { display: none; }
 

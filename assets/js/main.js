@@ -97,6 +97,14 @@ if (deck) {
   deck.addEventListener('scroll', sync, {passive: true});
   window.addEventListener('resize', sync);
   sync();
+
+  // A browser restores the row's scroll position on reload, which can leave it
+  // parked between two panels with the count pointing at neither. Settle onto
+  // whichever one it landed nearest once the layout is final.
+  window.addEventListener('load', () => {
+    if (deck.scrollLeft > 0) goTo(nearest());
+    sync();
+  });
 }
 
 // Pointer light. Skipped on touch, where there is no pointer to follow, and for

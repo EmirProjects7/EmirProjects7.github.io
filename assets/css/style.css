@@ -36,13 +36,16 @@ body {
 
 a { color: inherit; }
 
-/* A faint lift in the surface under the pointer. Nearly colourless and low
-   contrast on purpose: it should register as light in the room rather than as
-   a coloured spot chasing the cursor. It sits behind everything and takes no
-   clicks, so it can only ever be decoration. */
+/* A faint lift under the pointer. Nearly colourless and low contrast on
+   purpose: it should register as light in the room rather than as a coloured
+   spot chasing the cursor. It lies over the page rather than behind it, so the
+   light falls on the text and the panels too instead of stopping at the first
+   opaque surface, and it screens rather than paints, so it can only ever
+   lighten what is already there. It takes no clicks either way. */
 
 .glow {
-  position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  position: fixed; inset: 0; z-index: 4; pointer-events: none;
+  mix-blend-mode: screen;
   opacity: 0; transition: opacity .5s ease-out;
   background:
     radial-gradient(

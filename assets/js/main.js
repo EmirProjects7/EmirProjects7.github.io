@@ -94,6 +94,15 @@ if (deck) {
     goTo(panels.indexOf(panel));
   }, true);
 
+  // The row is focusable, so the arrow keys work once it has focus, and the
+  // default sideways scroll is stopped: a key press should land on a project
+  // rather than nudge the row a few pixels.
+  deck.addEventListener('keydown', (event) => {
+    if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+    event.preventDefault();
+    goTo(nearest() + (event.key === 'ArrowRight' ? 1 : -1));
+  });
+
   deck.addEventListener('scroll', sync, {passive: true});
   window.addEventListener('resize', sync);
   sync();

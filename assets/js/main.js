@@ -75,7 +75,14 @@ if (deck) {
 
   function sync() {
     const index = nearest();
-    panels.forEach((panel, i) => panel.classList.toggle('is-active', i === index));
+    panels.forEach((panel, i) => {
+      const active = i === index;
+      panel.classList.toggle('is-active', active);
+      // A dimmed panel is decoration until it reaches the middle. Saying which
+      // one is current lets a screen reader follow the arrow keys too.
+      if (active) panel.setAttribute('aria-current', 'true');
+      else panel.removeAttribute('aria-current');
+    });
     if (position) position.textContent = String(index + 1);
     if (prev) prev.disabled = index === 0;
     if (next) next.disabled = index === panels.length - 1;
